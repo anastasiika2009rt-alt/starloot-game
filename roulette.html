@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <title>StarLoot — Рулетка</title>
+  <style>
+    :root{
+      --bg1:#6a3bff;
+      --bg2:#00d2ff;
+      --bg3:#ff4fd8;
+      --glass: rgba(255,255,255,.14);
+      --glass2: rgba(0,0,0,.18);
+      --stroke: rgba(255,255,255,.22);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.72);
+      --btn1:#19e7ff;
+      --btn2:#7b6bff;
+      --btn3:#ff46d5;
+      --good:#46ff9a;
+      --warn:#ffd44d;
+      --danger:#ff5a7a;
+      --shadow: 0 18px 60px rgba(0,0,0,.28);
+      --radius: 26px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 20% 10%, rgba(255,255,255,.20), transparent 60%),
+        radial-gradient(900px 600px at 85% 20%, rgba(255,255,255,.14), transparent 60%),
+        linear-gradient(135deg,var(--bg1),var(--bg2) 55%, var(--bg3));
+      overflow-x:hidden;
+    }
+    .wrap{
+      max-width: 420px;
+      margin: 0 auto;
+      padding: 18px 16px 98px;
+    }
+
+    .top{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px;
+      padding: 10px 12px;
+      border:1px solid var(--stroke);
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(0,0,0,.08));
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow);
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px; min-width:0;
+    }
+    .logo{
+      width:38px; height:38px; border-radius: 14px;
+      display:grid; place-items:center;
+      background: linear-gradient(135deg, rgba(255,255,255,.22), rgba(0,0,0,.10));
+      border:1px solid rgba(255,255,255,.25);
+    }
+    .brand b{font-size:15px}
+    .brand small{display:block; color:var(--muted); font-size:12px; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+    .balances{
+      display:flex; align-items:center; gap:10px;
+    }
+    .pill{
+      padding:10px 12px;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.22);
+      background: rgba(0,0,0,.14);
+      backdrop-filter: blur(12px);
+      font-weight:700;
+      display:flex; align-items:center; gap:8px;
+      min-width: 92px;
+      justify-content:center;
+    }
+    .pill .v{color:#aef7ff}
+    .pill .s{color:#ffe08a}
+
+    .card{
+      margin-top: 14px;
+      border-radius: var(--radius);
+      border:1px solid rgba(255,255,255,.22);
+      background:
+        radial-gradient(700px 320px at 50% -10%, rgba(255,255,255,.22), transparent 60%),
+        linear-gradient(180deg, rgba(255,255,255,.14), rgba(0,0,0,.14));
+      backdrop-filter: blur(16px);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .card:before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(240px 240px at 15% 25%, rgba(25,231,255,.35), transparent 60%),
+        radial-gradient(240px 240px at 85% 30%, rgba(255,70,213,.28), transparent 60%),
+        radial-gradient(280px 280px at 55% 90%, rgba(123,107,255,.30), transparent 60%);
+      filter: blur(10px);
+      z-index:0;
+    }
+    .inner{position:relative; z-index:1; padding:16px}
+
+    .title{
+      display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+    }
+    .title h1{margin:0; font-size:22px; letter-spacing:.2px}
+    .title p{margin:6px 0 0; color:var(--muted); font-size:13px; line-height:1.35}
+
+    .costRow{
+      margin-top: 12px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+    .tile{
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.12);
+      border-radius: 18px;
+      padding: 12px;
+    }
+    .tile .k{color:var(--muted); font-size:12px}
+    .tile .v{font-size:18px; font-weight:800; margin-top:6px}
+    .tile .v .sp{color:#9ff8ff}
+
+    .wheelWrap{
+      margin-top: 14px;
+      display:grid;
+      place-items:center;
+    }
+    .wheel{
+      width: 290px;
+      height: 290px;
+      border-radius: 50%;
+      position: relative;
+      background:
+        conic-gradient(
+          #ff4fd8 0 40deg,
+          #7b6bff 40deg 80deg,
+          #19e7ff 80deg 120deg,
+          #46ff9a 120deg 160deg,
+          #ffd44d 160deg 200deg,
+          #ff5a7a 200deg 240deg,
+          #00d2ff 240deg 280deg,
+          #b86bff 280deg 320deg,
+          #ff4fd8 320deg 360deg
+        );
+      border: 10px solid rgba(255,255,255,.18);
+      box-shadow: 0 18px 70px rgba(0,0,0,.35);
+      overflow:hidden;
+      transition: transform 3.2s cubic-bezier(.08,.9,.18,1);
+    }
+    .wheel:after{
+      content:"";
+      position:absolute; inset:12px;
+      border-radius:50%;
+      background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.35), rgba(0,0,0,.12) 55%, rgba(0,0,0,.22));
+      border:1px solid rgba(255,255,255,.22);
+      backdrop-filter: blur(10px);
+    }
+    .hub{
+      position:absolute; inset:0;
+      display:grid; place-items:center;
+      z-index:3;
+      pointer-events:none;
+    }
+    .hub .am{
+      width:92px; height:92px;
+      border-radius: 28px;
+      display:grid; place-items:center;
+      background: linear-gradient(135deg, rgba(255,255,255,.22), rgba(0,0,0,.18));
+      border:1px solid rgba(255,255,255,.22);
+      box-shadow: 0 16px 40px rgba(0,0,0,.35);
+      font-size:42px;
+      transform: translateY(-4px);
+    }
+    .pointer{
+      width: 0; height: 0;
+      border-left: 14px solid transparent;
+      border-right: 14px solid transparent;
+      border-bottom: 26px solid rgba(255,255,255,.92);
+      filter: drop-shadow(0 10px 12px rgba(0,0,0,.35));
+      margin: 8px auto 0;
+    }
+    .pointerSmall{
+      width: 0; height: 0;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-bottom: 18px solid rgba(0,0,0,.25);
+      transform: translateY(-18px);
+      margin: 0 auto;
+    }
+
+    .actions{
+      margin-top: 14px;
+      display:grid;
+      gap:10px;
+    }
+    .btn{
+      border:0;
+      width:100%;
+      padding: 14px 14px;
+      border-radius: 18px;
+      font-weight:900;
+      font-size: 16px;
+      color: rgba(0,0,0,.70);
+      cursor:pointer;
+      background: linear-gradient(90deg, var(--btn1), var(--btn2), var(--btn3));
+      box-shadow: 0 18px 40px rgba(0,0,0,.25);
+    }
+    .btn:active{transform: translateY(1px)}
+    .btn2{
+      background: rgba(0,0,0,.18);
+      border:1px solid rgba(255,255,255,.18);
+      color: var(--text);
+      box-shadow: none;
+      font-weight:800;
+    }
+    .hint{
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align:center;
+      line-height:1.35;
+    }
+
+    /* bottom nav */
+    .nav{
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      padding: 10px 12px 14px;
+      background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.55));
+      backdrop-filter: blur(12px);
+    }
+    .tabs{
+      max-width: 420px;
+      margin: 0 auto;
+      border-radius: 22px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.22);
+      display:grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      padding: 8px;
+      box-shadow: 0 18px 40px rgba(0,0,0,.25);
+    }
+    .tab{
+      text-decoration:none;
+      color: rgba(255,255,255,.78);
+      font-weight:800;
+      font-size: 11px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap: 6px;
+      padding: 10px 6px;
+      border-radius: 16px;
+      border:1px solid transparent;
+    }
+    .tab .i{font-size:18px}
+    .tab.active{
+      background: linear-gradient(90deg, rgba(25,231,255,.26), rgba(123,107,255,.20), rgba(255,70,213,.20));
+      border-color: rgba(255,255,255,.18);
+      color: rgba(255,255,255,.95);
+    }
+
+    /* toast */
+    .toast{
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 110px;
+      background: rgba(0,0,0,.55);
+      border:1px solid rgba(255,255,255,.18);
+      color: rgba(255,255,255,.92);
+      padding: 10px 12px;
+      border-radius: 14px;
+      font-size: 13px;
+      opacity:0;
+      pointer-events:none;
+      transition: opacity .25s ease, transform .25s ease;
+      backdrop-filter: blur(10px);
+      max-width: 90vw;
+      text-align:center;
+    }
+    .toast.show{
+      opacity:1;
+      transform: translateX(-50%) translateY(-4px);
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <div class="logo">🎁</div>
+        <div style="min-width:0">
+          <b>StarLoot</b>
+          <small>Рулетка • подарки • звёзды • TON</small>
+        </div>
+      </div>
+      <div class="balances">
+        <div class="pill"><span>💎</span><span class="v" id="spTop">0</span><span>SP</span></div>
+        <div class="pill"><span>⭐</span><span class="s" id="starsTop">0</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="inner">
+        <div class="title">
+          <div>
+            <h1>🎰 Рулетка StarLoot</h1>
+            <p>Крути рулетку, трать <b>SP</b> и лови призы: бонусы, шансы, подарки (скоро).</p>
+          </div>
+        </div>
+
+        <div class="costRow">
+          <div class="tile">
+            <div class="k">🎟️ Стоимость прокрутки</div>
+            <div class="v"><span class="sp" id="spinCost">10</span> <span class="sp">SP</span></div>
+          </div>
+          <div class="tile">
+            <div class="k">🎁 Главный приз</div>
+            <div class="v">TG-Gift <span style="color:var(--muted); font-size:12px; font-weight:700">(скоро)</span></div>
+          </div>
+        </div>
+
+        <div class="wheelWrap">
+          <div class="pointer"></div>
+          <div class="pointerSmall"></div>
+
+          <div style="position:relative; width:290px; height:290px; margin-top:-10px;">
+            <div class="wheel" id="wheel"></div>
+            <div class="hub">
+              <div class="am">🐸</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn" id="spinBtn">🎰 Крутить (-<span id="spinCost2">10</span> SP)</button>
+          <button class="btn btn2" id="goBack">⬅ Назад в StarLoot</button>
+        </div>
+
+        <div class="hint">
+          Призы пока тестовые: +SP, +⭐, множитель шанса. Дальше подключим кейсы, магазин, TON и подарки TG.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Готово</div>
+
+  <div class="nav">
+    <div class="tabs">
+      <a class="tab" href="clicker.html"><div class="i">🐸</div><div>Кликер</div></a>
+      <a class="tab active" href="roulette.html"><div class="i">🎰</div><div>Рулетка</div></a>
+      <a class="tab" href="cases.html"><div class="i">🎁</div><div>Кейсы</div></a>
+      <a class="tab" href="shop.html"><div class="i">🛒</div><div>Магазин</div></a>
+      <a class="tab" href="profile.html"><div class="i">👤</div><div>Профиль</div></a>
+    </div>
+  </div>
+
+<script>
+  // ====== Storage ======
+  const LS_SP = "starloot_sp";
+  const LS_STARS = "starloot_stars";
+
+  function getNum(key, def=0){
+    const v = Number(localStorage.getItem(key));
+    return Number.isFinite(v) ? v : def;
+  }
+  function setNum(key, val){
+    localStorage.setItem(key, String(Math.max(0, Math.floor(val))));
+  }
+
+  // ====== UI ======
+  const spTop = document.getElementById("spTop");
+  const starsTop = document.getElementById("starsTop");
+  const wheel = document.getElementById("wheel");
+  const toast = document.getElementById("toast");
+
+  const spinCost = 10; // SP
+  document.getElementById("spinCost").textContent = spinCost;
+  document.getElementById("spinCost2").textContent = spinCost;
+
+  function render(){
+    spTop.textContent = getNum(LS_SP, 0);
+    starsTop.textContent = getNum(LS_STARS, 0);
+  }
+
+  function showToast(text){
+    toast.textContent = text;
+    toast.classList.add("show");
+    setTimeout(()=>toast.classList.remove("show"), 1600);
+  }
+
+  // ====== Spin logic (demo prizes) ======
+  let spinning = false;
+  let angle = 0;
+
+  // 9 секторов (пример)
+  const prizes = [
+    {label:"+5 SP", type:"sp", value:5},
+    {label:"+10 SP", type:"sp", value:10},
+    {label:"+1 ⭐", type:"stars", value:1},
+    {label:"+2 ⭐", type:"stars", value:2},
+    {label:"+15 SP", type:"sp", value:15},
+    {label:"Бонус x2 (скоро)", type:"bonus", value:2},
+    {label:"+25 SP", type:"sp", value:25},
+    {label:"+3 ⭐", type:"stars", value:3},
+    {label:"TG-Gift (скоро)", type:"gift", value:0},
+  ];
+
+  function applyPrize(p){
+    if(p.type==="sp"){
+      setNum(LS_SP, getNum(LS_SP,0) + p.value);
+      showToast(`🎉 Выигрыш: ${p.label}`);
+    }else if(p.type==="stars"){
+      setNum(LS_STARS, getNum(LS_STARS,0) + p.value);
+      showToast(`⭐ Выигрыш: ${p.label}`);
+    }else if(p.type==="gift"){
+      showToast("🎁 TG-Gift скоро добавим (пока заглушка)");
+    }else{
+      showToast("⚡ Бонусы скоро добавим (пока заглушка)");
+    }
+    render();
+  }
+
+  document.getElementById("spinBtn").addEventListener("click", ()=>{
+    if(spinning) return;
+
+    const sp = getNum(LS_SP,0);
+    if(sp < spinCost){
+      showToast("Не хватает SP 😿 Иди в кликер и заработай!");
+      return;
+    }
+
+    // списываем SP
+    setNum(LS_SP, sp - spinCost);
+    render();
+
+    spinning = true;
+
+    // выбираем приз
+    const idx = Math.floor(Math.random() * prizes.length);
+
+    // крутим визуально: 5-7 оборотов + сектор
+    const turns = 5 + Math.floor(Math.random()*3);
+    const sector = 360 / prizes.length; // 40
+    // чтобы стрелка указывала на сектор: добавим смещение
+    const targetAngle = (turns * 360) + (idx * sector) + (sector/2);
+    angle += targetAngle;
+    wheel.style.transform = `rotate(${angle}deg)`;
+
+    setTimeout(()=>{
+      spinning = false;
+      applyPrize(prizes[idx]);
+    }, 3300);
+  });
+
+  document.getElementById("goBack").addEventListener("click", ()=>{
+    location.href = "index.html";
+  });
+
+  render();
+</script>
+</body>
+</html>
