@@ -1,94 +1,85 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <title>StarLoot</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<div class="hero">
+        <div class="amnyam"><span>🐸🍬</span></div>
+      </div>
 
-  <style>
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: linear-gradient(135deg, #5f2cff, #2bbcff);
-      font-family: 'Segoe UI', sans-serif;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+      <div class="title">Неон-Лут от Ам Няма</div>
+      <div class="subtitle">Крути рулетку • копи SP • лови призы 🎁</div>
 
-    .card {
-      background: rgba(0, 0, 0, 0.35);
-      backdrop-filter: blur(14px);
-      border-radius: 24px;
-      padding: 32px 24px;
-      width: 90%;
-      max-width: 360px;
-      text-align: center;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-    }
+      <div class="grid">
+        <div class="tile">
+          <div class="k">🎰 Стоимость крутки</div>
+          <div class="v"><span class="sp">10 SP</span></div>
+        </div>
+        <div class="tile">
+          <div class="k">🎁 Главный приз</div>
+          <div class="v">TG-Gift</div>
+        </div>
+      </div>
 
-    .character {
-      font-size: 72px;
-      margin-bottom: 10px;
-    }
+      <div class="cta">
+        <button class="btn" onclick="spin()">🎰 Крутить рулетку</button>
+        <button class="btn2" onclick="openGifts()">🎁 Список подарков (скоро)</button>
+      </div>
 
-    h1 {
-      margin: 10px 0 6px;
-      font-size: 28px;
-    }
-
-    .subtitle {
-      opacity: 0.85;
-      margin-bottom: 20px;
-    }
-
-    .balance {
-      background: rgba(255,255,255,0.15);
-      border-radius: 14px;
-      padding: 10px;
-      margin-bottom: 22px;
-      font-size: 16px;
-    }
-
-    button {
-      width: 100%;
-      padding: 16px;
-      border: none;
-      border-radius: 18px;
-      font-size: 18px;
-      font-weight: 600;
-      background: linear-gradient(135deg, #00ffd5, #00bfff);
-      color: #003344;
-      cursor: pointer;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.35);
-    }
-
-    button:active {
-      transform: scale(0.97);
-    }
-  </style>
-</head>
-
-<body>
-  <div class="card">
-    <div class="character">🐸🍬</div>
-
-    <h1>StarLoot</h1>
-    <div class="subtitle">Ам Ням збирає SP ✨</div>
-
-    <div class="balance">
-      💎 Баланс: <b>100 SP</b>
+      <div class="footer">
+        <div class="tag">💜💙 Фиолет-неон</div>
+        <div class="tag">🐸 Ам Ням</div>
+      </div>
     </div>
-
-    <button onclick="spin()">
-      🎰 Крутити рулетку
-    </button>
   </div>
 
+  <div class="toast" id="toast">✨</div>
+
   <script>
-    function spin() {
-      alert("🎉 Ам Ням скоро почне крутити рулетку!");
+    // НА ПОТОМ: тут будет реальная рулетка и связь с ботом.
+    // Сейчас — красивый прототип с SP.
+
+    let sp = 100;
+    const spEl = document.getElementById('sp');
+    const toast = document.getElementById('toast');
+
+    function showToast(text){
+      toast.textContent = text;
+      toast.classList.add('show');
+      setTimeout(()=>toast.classList.remove('show'), 900);
+    }
+
+    function spin(){
+      if(sp < 10){
+        showToast("❌ Не хватает SP");
+        return;
+      }
+      sp -= 10;
+      spEl.textContent = sp;
+
+      const prizes = [
+        {t:"💎 +5 SP", w:45},
+        {t:"⭐ +1 бонус-крутка (скоро)", w:20},
+        {t:"🎁 TG-Gift (скоро)", w:12},
+        {t:"💎 +15 SP", w:18},
+        {t:"😅 Пусто (редко)", w:5},
+      ];
+
+      const pick = weightedPick(prizes);
+      showToast("🎉 " + pick);
+
+      // сейчас просто alert для проверки
+      setTimeout(()=>alert("Результат: " + pick), 120);
+    }
+
+    function openGifts(){
+      showToast("🎁 Скоро добавим витрину подарков!");
+      setTimeout(()=>alert("Скоро: список Telegram-подарков + цены в SP"), 120);
+    }
+
+    function weightedPick(items){
+      let sum = items.reduce((a,i)=>a+i.w,0);
+      let r = Math.random() * sum;
+      for(const i of items){
+        r -= i.w;
+        if(r <= 0) return i.t;
+      }
+      return items[0].t;
     }
   </script>
 </body>
