@@ -386,5 +386,28 @@
       return items[0].t;
     }
   </script>
+  <script>
+  // ===== ВАЛЮТЫ =====
+  function getSP(){
+    return parseInt(localStorage.getItem("sp") || "0", 10);
+  }
+  function setSP(v){
+    localStorage.setItem("sp", String(Math.max(0, v)));
+  }
+
+  function getStars(){
+    return parseInt(localStorage.getItem("stars") || "0", 10);
+  }
+  function setStars(v){
+    localStorage.setItem("stars", String(Math.max(0, v)));
+  }
+
+  function getTON(){
+    return parseFloat(localStorage.getItem("ton") || "0");
+  }
+  function setTON(v){
+    localStorage.setItem("ton", String(Math.max(0, v)));
+  }
+</script>
 </body>
 </html>
