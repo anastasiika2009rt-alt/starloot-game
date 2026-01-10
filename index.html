@@ -1,4 +1,306 @@
-<div class="hero">
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StarLoot</title>
+
+  <style>
+    :root{
+      --bg1:#3b0cff;
+      --bg2:#00b7ff;
+      --bg3:#b100ff;
+      --glass:rgba(255,255,255,.10);
+      --glass2:rgba(0,0,0,.28);
+      --neon:#00fff0;
+      --neon2:#a855ff;
+      --gold:#ffd84d;
+      --text:#ffffff;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+      color:var(--text);
+      overflow:hidden;
+      background:
+        radial-gradient(900px 500px at 20% 20%, rgba(0,255,240,.35), transparent 60%),
+        radial-gradient(700px 500px at 80% 30%, rgba(168,85,255,.40), transparent 55%),
+        radial-gradient(900px 700px at 60% 90%, rgba(255,216,77,.22), transparent 60%),
+        linear-gradient(135deg, var(--bg1), var(--bg2) 55%, var(--bg3));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    /* floating neon blobs */
+    .blob{
+      position:absolute;
+      filter: blur(40px);
+      opacity:.75;
+      mix-blend-mode: screen;
+      animation: float 10s ease-in-out infinite;
+    }
+    .b1{width:360px;height:360px;left:-120px;top:-120px;background:rgba(0,255,240,.55);}
+    .b2{width:420px;height:420px;right:-160px;top:40px;background:rgba(168,85,255,.55);animation-delay:-3s;}
+    .b3{width:480px;height:480px;left:10%;bottom:-220px;background:rgba(255,216,77,.30);animation-delay:-6s;}
+    @keyframes float{
+      0%,100%{transform: translate(0,0) scale(1)}
+      50%{transform: translate(20px, -18px) scale(1.05)}
+    }
+
+    .card{
+      position:relative;
+      width:min(420px, 92vw);
+      border-radius:28px;
+      padding:18px 18px 20px;
+      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(0,0,0,.18));
+      box-shadow:
+        0 25px 60px rgba(0,0,0,.45),
+        0 0 0 1px rgba(255,255,255,.10) inset;
+      backdrop-filter: blur(18px);
+      overflow:hidden;
+    }
+
+    /* top neon border */
+    .card:before{
+      content:"";
+      position:absolute; inset:-2px;
+      background: conic-gradient(from 120deg,
+        rgba(0,255,240,.0),
+        rgba(0,255,240,.7),
+        rgba(168,85,255,.7),
+        rgba(255,216,77,.5),
+        rgba(0,255,240,.0)
+      );
+      filter: blur(10px);
+      opacity:.55;
+      z-index:0;
+    }
+    .inner{
+      position:relative;
+      z-index:1;
+      border-radius:24px;
+      padding:18px 16px 16px;
+      background: rgba(0,0,0,.22);
+      box-shadow: 0 0 0 1px rgba(255,255,255,.08) inset;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:12px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      font-weight:800;
+      letter-spacing:.2px;
+    }
+    .logo{
+      width:42px;height:42px;border-radius:14px;
+      display:grid;place-items:center;
+      background: rgba(255,255,255,.10);
+      box-shadow:
+        0 10px 24px rgba(0,0,0,.35),
+        0 0 0 1px rgba(255,255,255,.10) inset;
+      position:relative;
+    }
+    .logo:after{
+      content:"";
+      position:absolute; inset:-2px;
+      border-radius:16px;
+      background: radial-gradient(circle at 30% 30%, rgba(0,255,240,.6), transparent 60%),
+                  radial-gradient(circle at 70% 60%, rgba(168,85,255,.55), transparent 55%);
+      filter: blur(10px);
+      z-index:-1;
+      opacity:.9;
+    }
+    .brand .name{font-size:18px}
+    .pill{
+      display:flex; align-items:center; gap:8px;
+      padding:10px 12px;
+      border-radius:16px;
+      background: rgba(255,255,255,.10);
+      box-shadow: 0 0 0 1px rgba(255,255,255,.10) inset;
+      font-weight:700;
+    }
+    .pill .count{
+      color: var(--neon);
+      text-shadow: 0 0 18px rgba(0,255,240,.65);
+    }
+
+    .hero{
+      display:grid;
+      place-items:center;
+      margin:6px 0 8px;
+    }
+
+    .amnyam{
+      width:132px;height:132px;border-radius:40px;
+      display:grid;place-items:center;
+      background: rgba(255,255,255,.10);
+      box-shadow:
+        0 20px 40px rgba(0,0,0,.40),
+        0 0 0 1px rgba(255,255,255,.10) inset;
+      position:relative;
+      overflow:hidden;
+      transform: translateZ(0);
+      animation: bob 2.8s ease-in-out infinite;
+    }
+    @keyframes bob{
+      0%,100%{transform: translateY(0)}
+      50%{transform: translateY(-6px)}
+    }
+    .amnyam:before{
+      content:"";
+      position:absolute; inset:-60px;
+      background: radial-gradient(circle at 30% 30%, rgba(0,255,240,.35), transparent 60%),
+                  radial-gradient(circle at 70% 60%, rgba(168,85,255,.35), transparent 55%),
+                  radial-gradient(circle at 50% 90%, rgba(255,216,77,.22), transparent 55%);
+      filter: blur(10px);
+    }
+    .amnyam span{
+      position:relative;
+      font-size:64px;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,.35));
+    }
+
+    .title{
+      text-align:center;
+      margin: 4px 0 2px;
+      font-size:26px;
+      font-weight:900;
+      letter-spacing:.3px;
+      text-shadow: 0 10px 30px rgba(0,0,0,.45);
+    }
+    .subtitle{
+      text-align:center;
+      opacity:.9;
+      margin:0 0 14px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+      margin-bottom:12px;
+    }
+    .tile{
+      border-radius:18px;
+      padding:12px 12px;
+      background: rgba(255,255,255,.08);
+      box-shadow: 0 0 0 1px rgba(255,255,255,.08) inset;
+    }
+    .tile .k{opacity:.8; font-size:12px}
+    .tile .v{font-size:18px; font-weight:900; margin-top:4px}
+    .tile .v .sp{
+      color: var(--gold);
+      text-shadow: 0 0 16px rgba(255,216,77,.45);
+    }
+
+    .cta{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top:6px;
+    }
+
+    .btn{
+      width:100%;
+      padding:16px 14px;
+      border:0;
+      border-radius:20px;
+      font-size:18px;
+      font-weight:900;
+      cursor:pointer;
+      color:#001b22;
+      background: linear-gradient(135deg, var(--neon), #00bfff 55%, #a855ff);
+      box-shadow:
+        0 18px 40px rgba(0,0,0,.45),
+        0 0 30px rgba(0,255,240,.35);
+      position:relative;
+      overflow:hidden;
+      transform: translateZ(0);
+    }
+    .btn:before{
+      content:"";
+      position:absolute; inset:-40px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.55), transparent 55%),
+                  radial-gradient(circle at 70% 70%, rgba(255,255,255,.25), transparent 55%);
+      transform: rotate(10deg);
+      opacity:.55;
+    }
+    .btn:active{transform: scale(.985)}
+
+    .btn2{
+      width:100%;
+      padding:14px 14px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.22);
+      color: white;
+      font-weight:800;
+      cursor:pointer;
+      box-shadow: 0 12px 30px rgba(0,0,0,.35);
+    }
+    .btn2:active{transform: scale(.99)}
+
+    .footer{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      margin-top:12px;
+      opacity:.9;
+      font-size:12px;
+    }
+    .tag{
+      padding:8px 10px;
+      border-radius:14px;
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.10);
+    }
+
+    /* small toast */
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:24px;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,.65);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:16px;
+      padding:12px 14px;
+      color:white;
+      font-weight:700;
+      opacity:0;
+      pointer-events:none;
+      transition: .25s ease;
+      box-shadow: 0 18px 40px rgba(0,0,0,.45);
+    }
+    .toast.show{opacity:1; transform: translateX(-50%) translateY(-6px);}
+  </style>
+</head>
+
+<body>
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+
+  <div class="card">
+    <div class="inner">
+      <div class="topbar">
+        <div class="brand">
+          <div class="logo">🎁</div>
+          <div class="name">StarLoot</div>
+        </div>
+        <div class="pill">💎 <span class="count" id="sp">100</span> SP</div>
+      </div>
+
+      <div class="hero">
         <div class="amnyam"><span>🐸🍬</span></div>
       </div>
 
