@@ -254,13 +254,17 @@
   <script>
     const COST = 10;
 
-    function getSP(){
-      return parseInt(localStorage.getItem("sp") || "0", 10);
-    }
-    function setSP(v){
-      localStorage.setItem("sp", String(Math.max(0, v)));
-      renderSP();
-    }
+// ЄДИНІ ключі для ВСЬОГО проєкту
+const KEY_SP = "starloot_sp";
+
+function getSP(){
+  return Number(localStorage.getItem(KEY_SP) || "0");
+}
+
+function setSP(v){
+  localStorage.setItem(KEY_SP, String(Math.max(0, Math.floor(v))));
+  renderSP();
+}
     function renderSP(){
       document.getElementById("spTop").textContent = getSP();
     }
