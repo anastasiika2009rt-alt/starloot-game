@@ -287,10 +287,10 @@
 
   <script>
     // общий баланс (SP) через localStorage
-    function getSP(){ return Number(localStorage.getItem('SP') || '0'); }
-    function setSP(v){ localStorage.setItem('SP', String(Math.max(0, Math.floor(v)))); }
-    function getStars(){ return Number(localStorage.getItem('STARS') || '0'); }
-    function setStars(v){ localStorage.setItem('STARS', String(Math.max(0, Math.floor(v)))); }
+    function getSP(){ return Number(localStorage.getItem('starloot_sp') || '0'); }
+function setSP(v){ localStorage.setItem('starloot_sp', String(Math.max(0, Math.floor(v)))); }
+function getStars(){ return Number(localStorage.getItem('starloot_stars') || '0'); }
+function setStars(v){ localStorage.setItem('starloot_stars', String(Math.max(0, Math.floor(v)))); }
 
     function render(){
       document.getElementById('spTop').textContent = getSP();
