@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>StarLoot — Кейсы</title>
+  <style>
+    :root{
+      --bg1:#6a5cff;
+      --bg2:#28c8ff;
+      --glass: rgba(255,255,255,.14);
+      --glass2: rgba(0,0,0,.18);
+      --stroke: rgba(255,255,255,.18);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.70);
+      --shadow: 0 18px 60px rgba(0,0,0,.28);
+      --radius: 28px;
+      --grad: linear-gradient(135deg,#00e5ff,#a855f7,#ff4fd8);
+      --grad2: linear-gradient(135deg,#0ea5ff,#22c55e);
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(900px 700px at 10% 15%, rgba(255,255,255,.18), transparent 60%),
+        radial-gradient(900px 700px at 90% 85%, rgba(255,255,255,.16), transparent 60%),
+        linear-gradient(135deg,var(--bg1),var(--bg2));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 18px;
+    }
+
+    .app{
+      width:min(430px, 100%);
+      border-radius: 34px;
+      padding: 16px 16px 86px;
+      background: rgba(0,0,0,.12);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom: 14px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding: 10px 12px;
+      border-radius: 18px;
+      background: var(--glass2);
+      border: 1px solid var(--stroke);
+    }
+    .logo{
+      width:34px;height:34px;border-radius:14px;
+      background: var(--grad);
+      display:grid;place-items:center;
+      box-shadow: 0 10px 24px rgba(0,0,0,.25);
+    }
+    .brand b{font-size:14px; letter-spacing:.2px}
+    .brand small{display:block; font-size:11px; color:var(--muted); margin-top:2px}
+
+    .wallet{
+      display:flex; gap:10px; align-items:center;
+    }
+    .pill{
+      padding: 10px 12px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.10);
+      border: 1px solid var(--stroke);
+      display:flex; align-items:center; gap:8px;
+      font-weight:700;
+    }
+    .pill span{font-weight:800}
+    .pill .s{color:#ffd54a}
+    .pill .sp{color:#77ffcc}
+
+    .card{
+      margin-top: 10px;
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.10);
+      border: 1px solid var(--stroke);
+      padding: 16px;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    h1{
+      margin: 6px 0 2px;
+      font-size: 22px;
+      letter-spacing:.2px;
+    }
+    .sub{
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .case{
+      border-radius: 22px;
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(255,255,255,.14);
+      padding: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.18);
+      position:relative;
+      overflow:hidden;
+      min-height: 156px;
+    }
+
+    .badge{
+      position:absolute;
+      top:10px;
+      right:10px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.18);
+      color: rgba(255,255,255,.92);
+    }
+
+    .case .pic{
+      width: 54px; height:54px;
+      border-radius: 18px;
+      background: var(--grad);
+      display:grid; place-items:center;
+      font-size: 26px;
+      box-shadow: 0 12px 26px rgba(0,0,0,.25);
+      margin-bottom: 10px;
+    }
+
+    .case b{display:block; font-size: 14px; margin-bottom: 6px}
+    .case small{color: var(--muted); font-size: 12px; display:block; min-height: 28px}
+
+    .buy{
+      margin-top: 10px;
+      width:100%;
+      border:0;
+      border-radius: 16px;
+      padding: 10px 10px;
+      font-weight: 900;
+      color: rgba(0,0,0,.85);
+      background: linear-gradient(135deg,#fff1a8,#ffd54a);
+      cursor:pointer;
+    }
+    .buy2{
+      background: var(--grad2);
+      color: rgba(255,255,255,.95);
+    }
+
+    .toast{
+      position:absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 92px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(0,0,0,.55);
+      border: 1px solid rgba(255,255,255,.14);
+      display:none;
+      text-align:center;
+      color: rgba(255,255,255,.95);
+    }
+
+    .nav{
+      position:absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      height: 64px;
+      border-radius: 22px;
+      background: rgba(0,0,0,.22);
+      border: 1px solid rgba(255,255,255,.14);
+      display:flex;
+      align-items:center;
+      justify-content:space-around;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    .nav a{
+      text-decoration:none;
+      color: rgba(255,255,255,.72);
+      font-size: 11px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:6px;
+      padding: 8px 10px;
+      border-radius: 16px;
+    }
+    .nav a.active{
+      color: rgba(255,255,255,.96);
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.12);
+    }
+    .nav a i{font-style:normal; font-size: 18px}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="top">
+      <div class="brand">
+        <div class="logo">🎁</div>
+        <div>
+          <b>StarLoot</b>
+          <small>Кейсы • подарки • Stars • TON</small>
+        </div>
+      </div>
+      <div class="wallet">
+        <div class="pill"><span class="sp">💎</span> SP: <span id="spTop">0</span></div>
+        <div class="pill"><span class="s">⭐</span> Stars: <span id="starsTop">0</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h1>Кейсы StarLoot</h1>
+      <p class="sub">Открывай кейсы — собирай призы 🎁 (пока демо). Позже добавим реальные TG-подарки, Stars и TON.</p>
+
+      <div class="grid">
+        <div class="case">
+          <div class="badge">SP</div>
+          <div class="pic">🐸</div>
+          <b>Кейс «Ам Ням»</b>
+          <small>Шанс бонуса SP и мини-призов.</small>
+          <button class="buy" onclick="buySP(25)">Открыть за 25 SP</button>
+        </div>
+
+        <div class="case">
+          <div class="badge">SP</div>
+          <div class="pic">🎁</div>
+          <b>Кейс «Подарок»</b>
+          <small>Демо-набор подарков (скоро).</small>
+          <button class="buy" onclick="buySP(50)">Открыть за 50 SP</button>
+        </div>
+
+        <div class="case">
+          <div class="badge">⭐</div>
+          <div class="pic">⭐</div>
+          <b>Stars-кейс</b>
+          <small>Платёж звёздами (позже подключим).</small>
+          <button class="buy buy2" onclick="soon('Stars-оплата скоро')">Открыть за 150 ⭐</button>
+        </div>
+
+        <div class="case">
+          <div class="badge">💠</div>
+          <div class="pic">💠</div>
+          <b>TON-кейс</b>
+          <small>Платёж TON (скоро).</small>
+          <button class="buy buy2" onclick="soon('TON-оплата скоро')">Открыть за 0.3 TON</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast">Готово</div>
+
+    <div class="nav">
+      <a href="clicker.html"><i>🐸</i>Кликер</a>
+      <a href="roulette.html"><i>🎰</i>Рулетка</a>
+      <a href="index.html"><i>🎁</i>Главная</a>
+      <a class="active" href="cases.html"><i>📦</i>Кейсы</a>
+      <a href="index.html"><i>👤</i>Профиль</a>
+    </div>
+  </div>
+
+  <script>
+    // общий баланс (SP) через localStorage
+    function getSP(){ return Number(localStorage.getItem('SP') || '0'); }
+    function setSP(v){ localStorage.setItem('SP', String(Math.max(0, Math.floor(v)))); }
+    function getStars(){ return Number(localStorage.getItem('STARS') || '0'); }
+    function setStars(v){ localStorage.setItem('STARS', String(Math.max(0, Math.floor(v)))); }
+
+    function render(){
+      document.getElementById('spTop').textContent = getSP();
+      document.getElementById('starsTop').textContent = getStars();
+    }
+
+    function toast(text){
+      const t = document.getElementById('toast');
+      t.textContent = text;
+      t.style.display = 'block';
+      setTimeout(()=> t.style.display='none', 2100);
+    }
+
+    function buySP(cost){
+      const sp = getSP();
+      if(sp < cost){
+        toast('❌ Не хватает SP. Заработай в кликере 🐸');
+        return;
+      }
+      setSP(sp - cost);
+      render();
+      toast('🎁 Кейс открыт! (пока демо)');
+    }
+
+    function soon(text){
+      toast('⏳ ' + text);
+    }
+
+    render();
+  </script>
+</body>
+</html>
