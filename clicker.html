@@ -1,373 +1,422 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>StarLoot • Кликер</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Кликер Ам Няма • StarLoot</title>
   <style>
     :root{
-      --bg1:#5b2cff;   /* фиолетовый */
-      --bg2:#00c2ff;   /* голубой */
-      --card: rgba(10, 12, 28, .55);
-      --stroke: rgba(255,255,255,.14);
-      --text:#ffffff;
+      --bg1:#6a00ff;
+      --bg2:#00b3ff;
+      --bg3:#ff2bd6;
+      --card: rgba(0,0,0,.28);
+      --card2: rgba(255,255,255,.08);
+      --text: rgba(255,255,255,.92);
       --muted: rgba(255,255,255,.72);
-      --accent1:#ff2bd6;
-      --accent2:#00e5ff;
-      --gold:#ffcf4a;
-      --good:#45ff9a;
-      --shadow: 0 18px 40px rgba(0,0,0,.35);
-      --radius: 22px;
+      --stroke: rgba(255,255,255,.18);
+      --glow: rgba(0, 255, 255, .35);
+      --glow2: rgba(255, 0, 230, .28);
+      --good:#41ffb4;
+      --warn:#ffd45a;
     }
 
-    *{box-sizing:border-box;}
-    html,body{height:100%; margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--text);}
-
+    *{box-sizing:border-box}
+    html,body{height:100%}
     body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
       background:
-        radial-gradient(1200px 700px at 50% -10%, rgba(255,255,255,.25), transparent 60%),
-        radial-gradient(900px 500px at 20% 30%, rgba(255,43,214,.18), transparent 55%),
-        radial-gradient(900px 500px at 80% 40%, rgba(0,229,255,.22), transparent 55%),
-        linear-gradient(160deg, var(--bg1), var(--bg2));
+        radial-gradient(900px 600px at 15% 20%, rgba(255,255,255,.10), transparent 55%),
+        radial-gradient(900px 600px at 85% 70%, rgba(255,255,255,.10), transparent 55%),
+        radial-gradient(1200px 900px at 50% -10%, rgba(255, 0, 230, .22), transparent 60%),
+        linear-gradient(135deg, var(--bg1), var(--bg2) 55%, var(--bg3));
       overflow:hidden;
     }
 
-    .screen{
+    /* неоновая “пыль” */
+    .sparkles{
+      position:fixed; inset:0; pointer-events:none; opacity:.55;
+      background:
+        radial-gradient(circle at 12% 18%, rgba(255,255,255,.20) 0 2px, transparent 3px),
+        radial-gradient(circle at 28% 62%, rgba(255,255,255,.18) 0 2px, transparent 3px),
+        radial-gradient(circle at 68% 22%, rgba(255,255,255,.14) 0 2px, transparent 3px),
+        radial-gradient(circle at 82% 58%, rgba(255,255,255,.16) 0 2px, transparent 3px),
+        radial-gradient(circle at 42% 42%, rgba(255,255,255,.12) 0 2px, transparent 3px);
+      filter: blur(.2px);
+      animation: float 8s ease-in-out infinite;
+    }
+    @keyframes float{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-10px)}
+    }
+
+    .wrap{
       height:100%;
       display:flex;
-      flex-direction:column;
-      padding: 18px 16px 86px; /* место под нижнее меню */
-      gap:14px;
-    }
-
-    /* Top bar */
-    .top{
-      display:flex;
       align-items:center;
-      justify-content:space-between;
-      gap:12px;
+      justify-content:center;
+      padding: 18px;
     }
 
-    .brand{
-      display:flex; align-items:center; gap:10px;
-      padding:10px 12px;
-      border-radius: 16px;
-      background: rgba(0,0,0,.18);
-      border:1px solid var(--stroke);
-      backdrop-filter: blur(12px);
-    }
-    .logo{
-      width:34px; height:34px;
-      border-radius: 12px;
-      display:grid; place-items:center;
-      background: linear-gradient(135deg, rgba(255,43,214,.9), rgba(0,229,255,.9));
-      box-shadow: 0 10px 22px rgba(0,0,0,.25);
-      font-weight:900;
-    }
-    .brand .t1{font-weight:800; line-height:1;}
-    .brand .t2{font-size:12px; color:var(--muted); margin-top:2px;}
-
-    .wallet{
-      display:flex; gap:10px; align-items:center;
-    }
-    .pill{
-      display:flex; align-items:center; gap:8px;
-      padding:10px 12px;
-      border-radius: 16px;
-      background: rgba(0,0,0,.18);
-      border:1px solid var(--stroke);
-      backdrop-filter: blur(12px);
-    }
-    .pill b{font-weight:900;}
-    .spDot{
-      width:10px; height:10px; border-radius: 99px;
-      background: radial-gradient(circle at 30% 30%, #fff, var(--good));
-      box-shadow: 0 0 18px rgba(69,255,154,.55);
-    }
-
-    /* Card */
     .card{
-      flex:1;
-      background: var(--card);
-      border:1px solid var(--stroke);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(18px);
-      padding: 18px 16px;
-      display:flex;
-      flex-direction:column;
-      gap:14px;
+      width:min(430px, 100%);
+      border: 1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(0,0,0,.30), rgba(0,0,0,.18));
+      box-shadow:
+        0 18px 60px rgba(0,0,0,.35),
+        0 0 40px var(--glow),
+        0 0 40px var(--glow2);
+      border-radius: 28px;
+      padding: 16px;
       position:relative;
       overflow:hidden;
     }
-
-    .glow{
-      position:absolute; inset:-80px;
-      background:
-        radial-gradient(420px 260px at 30% 20%, rgba(255,43,214,.28), transparent 60%),
-        radial-gradient(420px 260px at 80% 35%, rgba(0,229,255,.24), transparent 60%),
-        radial-gradient(520px 300px at 55% 100%, rgba(255,207,74,.10), transparent 70%);
+    .card::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background: radial-gradient(400px 220px at 25% 20%, rgba(0,255,255,.18), transparent 60%),
+                  radial-gradient(380px 240px at 80% 70%, rgba(255,0,230,.16), transparent 60%);
       pointer-events:none;
     }
 
-    .title{
+    .topbar{
       position:relative;
-      font-size:22px; font-weight:900;
-      margin: 2px 0 0;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding: 6px 6px 12px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      font-weight:800;
       letter-spacing:.2px;
     }
-    .subtitle{
+    .logo{
+      width:38px; height:38px;
+      border-radius: 14px;
+      display:grid; place-items:center;
+      background: linear-gradient(135deg, rgba(0,255,255,.25), rgba(255,0,230,.18));
+      border: 1px solid rgba(255,255,255,.20);
+      box-shadow: 0 10px 26px rgba(0,0,0,.25);
+      font-size:18px;
+    }
+    .pill{
+      display:flex; align-items:center; gap:8px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.08);
+      backdrop-filter: blur(10px);
+      font-weight:800;
+      white-space:nowrap;
+    }
+    .pill small{font-weight:700; opacity:.85}
+    .spnum{color: var(--good); text-shadow: 0 0 12px rgba(65,255,180,.35)}
+
+    .hero{
       position:relative;
-      margin:0;
-      color: var(--muted);
-      font-size:13px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      border-radius: 24px;
+      padding: 16px;
+      margin-top: 6px;
+      backdrop-filter: blur(10px);
     }
 
-    /* Clicker area */
-    .clickArea{
-      position:relative;
+    .title{
+      margin: 10px 0 4px;
+      font-size: 22px;
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: .2px;
+      text-align:center;
+    }
+    .subtitle{
+      margin: 0 0 14px;
+      text-align:center;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 13.5px;
+    }
+
+    .nyam{
+      width: 140px; height: 140px;
+      margin: 6px auto 10px;
+      border-radius: 34px;
       display:grid;
       place-items:center;
-      gap:10px;
-      padding: 10px 0 0;
-      flex:1;
-    }
-
-    .omnom{
-      width: 150px; height: 150px;
-      border-radius: 36px;
-      background: rgba(255,255,255,.08);
-      border:1px solid var(--stroke);
-      box-shadow: 0 16px 40px rgba(0,0,0,.35);
-      display:grid; place-items:center;
-      font-size: 78px;
+      position:relative;
+      background: linear-gradient(135deg, rgba(0,255,255,.22), rgba(255,0,230,.18));
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow:
+        0 18px 40px rgba(0,0,0,.25),
+        0 0 30px rgba(0,255,255,.25);
       user-select:none;
       cursor:pointer;
-      transform: translateZ(0);
-      transition: transform .06s ease;
+      transition: transform .08s ease;
+      overflow:hidden;
     }
-    .omnom:active{ transform: scale(.96); }
-
-    .hint{
-      font-size:13px;
-      color: var(--muted);
-      text-align:center;
-      margin: 0;
+    .nyam:active{transform: scale(.97)}
+    .nyam .face{
+      font-size: 64px;
+      filter: drop-shadow(0 10px 12px rgba(0,0,0,.35));
+    }
+    .nyam .candy{
+      position:absolute;
+      bottom: 12px;
+      right: 14px;
+      font-size: 22px;
+      opacity: .95;
+      filter: drop-shadow(0 8px 8px rgba(0,0,0,.35));
+      animation: candy 2.2s ease-in-out infinite;
+    }
+    @keyframes candy{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-6px)}
     }
 
     .stats{
       display:grid;
       grid-template-columns: 1fr 1fr;
-      gap:10px;
-      position:relative;
+      gap: 10px;
+      margin: 10px 0 12px;
     }
-    .stat{
-      padding:12px 12px;
-      border-radius: 16px;
-      background: rgba(0,0,0,.18);
-      border:1px solid var(--stroke);
-      backdrop-filter: blur(12px);
+    .box{
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      border-radius: 18px;
+      padding: 12px;
+      backdrop-filter: blur(10px);
     }
-    .stat .k{font-size:12px; color:var(--muted);}
-    .stat .v{font-size:18px; font-weight:900; margin-top:2px;}
-    .stat .v small{font-size:12px; color:var(--muted); font-weight:700;}
+    .k{
+      color: var(--muted);
+      font-weight: 800;
+      font-size: 12.5px;
+      display:flex; align-items:center; gap:8px;
+    }
+    .v{
+      margin-top: 6px;
+      font-weight: 900;
+      font-size: 18px;
+      letter-spacing:.2px;
+    }
+    .v .hi{color: var(--warn); text-shadow:0 0 12px rgba(255,212,90,.35)}
 
-    .actions{
-      display:flex;
-      gap:10px;
-      position:relative;
+    .btnRow{
+      display:grid;
+      gap: 10px;
+      margin-top: 6px;
     }
     .btn{
-      flex:1;
-      border:0;
-      padding:12px 12px;
-      border-radius: 16px;
-      font-weight:900;
-      color:#0b0d1c;
-      cursor:pointer;
+      width:100%;
+      border: 0;
+      border-radius: 18px;
+      padding: 14px 14px;
+      font-weight: 900;
+      font-size: 16px;
+      color: rgba(255,255,255,.95);
+      background: linear-gradient(90deg, rgba(0,255,255,.55), rgba(255,0,230,.45));
       box-shadow: 0 14px 30px rgba(0,0,0,.25);
-      background: linear-gradient(135deg, var(--accent1), var(--accent2));
-    }
-    .btn.secondary{
-      background: rgba(255,255,255,.10);
-      color: var(--text);
-      border:1px solid var(--stroke);
-      box-shadow:none;
-    }
-
-    /* Bottom nav */
-    .nav{
-      position:fixed;
-      left: 12px; right: 12px; bottom: 12px;
-      height: 64px;
-      border-radius: 22px;
-      background: rgba(0,0,0,.30);
-      border:1px solid var(--stroke);
-      backdrop-filter: blur(16px);
-      box-shadow: 0 18px 40px rgba(0,0,0,.35);
-      display:flex;
-      align-items:center;
-      justify-content:space-around;
-      gap:6px;
-      padding: 8px 10px;
-    }
-    .nav button{
-      width: 20%;
-      height: 48px;
-      border:0;
-      background: transparent;
-      color: rgba(255,255,255,.70);
-      border-radius: 16px;
       cursor:pointer;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      gap:2px;
-      font-size:11px;
-      font-weight:800;
     }
-    .nav button .i{font-size:18px; line-height:1;}
-    .nav button.active{
-      color:#fff;
-      background: rgba(255,255,255,.10);
-      border:1px solid rgba(255,255,255,.12);
+    .btn2{
+      width:100%;
+      border-radius: 18px;
+      padding: 12px 14px;
+      font-weight: 850;
+      font-size: 14px;
+      color: rgba(255,255,255,.88);
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.14);
+      cursor:pointer;
     }
 
-    /* Toast */
-    .toast{
-      position:fixed;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: 92px;
-      background: rgba(0,0,0,.55);
-      border:1px solid var(--stroke);
-      backdrop-filter: blur(12px);
-      color:#fff;
-      padding:10px 12px;
-      border-radius: 14px;
-      font-weight:800;
-      display:none;
-      max-width: 92vw;
+    .hint{
       text-align:center;
+      margin-top: 10px;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 12.5px;
+    }
+
+    /* всплывающие +SP */
+    .pop{
+      position:fixed;
+      font-weight: 900;
+      pointer-events:none;
+      animation: pop 900ms ease-out forwards;
+      text-shadow: 0 0 14px rgba(65,255,180,.55);
+    }
+    @keyframes pop{
+      0%{transform:translateY(0) scale(.95); opacity:0}
+      15%{opacity:1}
+      100%{transform:translateY(-70px) scale(1.08); opacity:0}
+    }
+
+    .footer{
+      margin-top: 10px;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      color: rgba(255,255,255,.60);
+      font-weight: 800;
+      font-size: 12px;
+      position:relative;
+    }
+    .tag{
+      padding: 8px 10px;
+      border-radius: 14px;
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(255,255,255,.12);
+      white-space:nowrap;
     }
   </style>
 </head>
 
 <body>
-  <div class="screen" id="screenClicker">
-    <div class="top">
-      <div class="brand">
-        <div class="logo">🎁</div>
-        <div>
-          <div class="t1">StarLoot</div>
-          <div class="t2">Мини-игры • подарки • звёзды • TON</div>
-        </div>
-      </div>
+  <div class="sparkles"></div>
 
-      <div class="wallet">
-        <div class="pill"><span class="spDot"></span><b id="spBalance">15</b>&nbsp;SP</div>
-        <div class="pill">⭐ <b id="starsBalance">0</b></div>
-      </div>
-    </div>
-
+  <div class="wrap">
     <div class="card">
-      <div class="glow"></div>
-
-      <h1 class="title">Кликер «Ам Ням»</h1>
-      <p class="subtitle">Тапай по Ам Няму — зарабатывай SP. Потом SP можно тратить на рулетку и кейсы.</p>
-
-      <div class="clickArea">
-        <div class="omnom" id="omnomBtn" title="Тап!">🐸</div>
-        <p class="hint">Каждый тап: <b>+1 SP</b> • Серия: <b id="streak">0</b></p>
-      </div>
-
-      <div class="stats">
-        <div class="stat">
-          <div class="k">SP за сессию</div>
-          <div class="v"><span id="spSession">0</span> <small>SP</small></div>
+      <div class="topbar">
+        <div class="brand">
+          <div class="logo">🎁</div>
+          <div>StarLoot</div>
         </div>
-        <div class="stat">
-          <div class="k">Уровень</div>
-          <div class="v"><span id="level">1</span> <small>lvl</small></div>
+        <div class="pill">
+          💎 <small>SP:</small> <span id="spTop" class="spnum">0</span>
         </div>
       </div>
 
-      <div class="actions">
-        <button class="btn" id="btnToHome">↩️ Назад в StarLoot</button>
-        <button class="btn secondary" id="btnBoost">⚡ Буст (скоро)</button>
+      <div class="hero">
+        <div class="nyam" id="nyamBtn" aria-label="Кликер Ам Няма">
+          <div class="face">🐸</div>
+          <div class="candy">🍬</div>
+        </div>
+
+        <div class="title">Кликер Ам Няма</div>
+        <div class="subtitle">Кликай по Ам Няму — копи <b>SP</b> для рулеток, кейсов и TG-подарков 🎁</div>
+
+        <div class="stats">
+          <div class="box">
+            <div class="k">⚡ SP за клик</div>
+            <div class="v"><span class="hi" id="spPerClick">+1</span></div>
+          </div>
+          <div class="box">
+            <div class="k">🔥 Серия кликов</div>
+            <div class="v"><span id="streak">0</span></div>
+          </div>
+        </div>
+
+        <div class="btnRow">
+          <button class="btn" id="bonusBtn">🎁 Забрать бонус (+25 SP)</button>
+          <button class="btn2" id="backBtn">⬅️ Назад в StarLoot</button>
+        </div>
+
+        <div class="hint" id="hint">Подсказка: 10 быстрых кликов подряд → +5 SP бонусом 😉</div>
+
+        <div class="footer">
+          <div class="tag">💜💙 Неон-стиль</div>
+          <div class="tag">⭐ Stars / 💎 TON (скоро)</div>
+        </div>
       </div>
     </div>
   </div>
-
-  <div class="nav">
-    <button class="active" onclick="toast('Ты уже в кликере!')"><span class="i">🐸</span>Кликер</button>
-    <button onclick="toast('Рулетка будет на отдельной странице позже ✅')"><span class="i">🎰</span>Рулетка</button>
-    <button onclick="toast('Кейсы будут на отдельной странице позже ✅')"><span class="i">🎁</span>Кейсы</button>
-    <button onclick="toast('Магазин (Stars / TON) добавим позже ✅')"><span class="i">🛒</span>Магазин</button>
-    <button onclick="toast('Профиль добавим позже ✅')"><span class="i">👤</span>Профиль</button>
-  </div>
-
-  <div class="toast" id="toast"></div>
 
   <script>
-    let sp = Number(localStorage.getItem("sp") || 15);
-    let stars = Number(localStorage.getItem("stars") || 0);
-    let spSession = 0;
-    let streak = 0;
-    let level = Number(localStorage.getItem("lvl") || 1);
+    // ====== НАСТРОЙКИ ======
+    const STORAGE_KEY = "starloot_sp";
+    const BONUS_KEY = "starloot_bonus_time";
+    const BASE_PER_CLICK = 1;
 
-    const spEl = document.getElementById("spBalance");
-    const starsEl = document.getElementById("starsBalance");
-    const spSessionEl = document.getElementById("spSession");
+    // ====== СОСТОЯНИЕ ======
+    let sp = Number(localStorage.getItem(STORAGE_KEY) || "0");
+    let streak = 0;
+    let lastClick = 0;
+
+    const spTop = document.getElementById("spTop");
     const streakEl = document.getElementById("streak");
-    const levelEl = document.getElementById("level");
-    const omnomBtn = document.getElementById("omnomBtn");
+    const spPerClickEl = document.getElementById("spPerClick");
+    const nyamBtn = document.getElementById("nyamBtn");
+    const bonusBtn = document.getElementById("bonusBtn");
+    const backBtn = document.getElementById("backBtn");
 
     function render(){
-      spEl.textContent = sp;
-      starsEl.textContent = stars;
-      spSessionEl.textContent = spSession;
+      spTop.textContent = sp;
       streakEl.textContent = streak;
-      levelEl.textContent = level;
-      localStorage.setItem("sp", sp);
-      localStorage.setItem("stars", stars);
-      localStorage.setItem("lvl", level);
+      spPerClickEl.textContent = "+" + BASE_PER_CLICK;
+      localStorage.setItem(STORAGE_KEY, String(sp));
     }
-
-    function toast(msg){
-      const t = document.getElementById("toast");
-      t.textContent = msg;
-      t.style.display = "block";
-      clearTimeout(window.__t);
-      window.__t = setTimeout(()=> t.style.display="none", 1600);
-    }
-
-    omnomBtn.addEventListener("click", ()=>{
-      sp += 1;
-      spSession += 1;
-      streak += 1;
-
-      if (sp >= level * 50) { // простая прокачка
-        level += 1;
-        toast("✨ Уровень повышен! Теперь lvl " + level);
-      }
-
-      render();
-    });
-
-    document.getElementById("btnToHome").addEventListener("click", ()=>{
-      // сюда позже сделаем переход обратно в главную страницу игры
-      // пока просто закрываем/показываем подсказку
-      toast("Дальше сделаем главную страницу StarLoot ✅");
-    });
-
-    document.getElementById("btnBoost").addEventListener("click", ()=>{
-      toast("Буст добавим позже (x2 SP на 30 сек) ✅");
-    });
-
     render();
+
+    // +SP всплывашка
+    function popText(text, x, y){
+      const el = document.createElement("div");
+      el.className = "pop";
+      el.textContent = text;
+      el.style.left = x + "px";
+      el.style.top = y + "px";
+      document.body.appendChild(el);
+      setTimeout(()=>el.remove(), 900);
+    }
+
+    function addSP(amount){
+      sp += amount;
+      render();
+    }
+
+    nyamBtn.addEventListener("click", (e)=>{
+      const now = Date.now();
+      if(now - lastClick < 900){ streak++; } else { streak = 1; }
+      lastClick = now;
+
+      addSP(BASE_PER_CLICK);
+
+      const rect = nyamBtn.getBoundingClientRect();
+      const x = rect.left + rect.width/2;
+      const y = rect.top + rect.height/2;
+      popText("+" + BASE_PER_CLICK + " SP", x, y);
+
+      // Бонус за серию
+      if(streak === 10){
+        addSP(5);
+        popText("+5 SP (серия!)", x, y - 10);
+      }
+      streakEl.textContent = streak;
+    });
+
+    // Бонус раз в 6 часов
+    function canTakeBonus(){
+      const last = Number(localStorage.getItem(BONUS_KEY) || "0");
+      return (Date.now() - last) > 6 * 60 * 60 * 1000;
+    }
+    function updateBonusButton(){
+      if(canTakeBonus()){
+        bonusBtn.textContent = "🎁 Забрать бонус (+25 SP)";
+        bonusBtn.disabled = false;
+        bonusBtn.style.opacity = "1";
+      } else {
+        bonusBtn.textContent = "⏳ Бонус будет позже";
+        bonusBtn.disabled = true;
+        bonusBtn.style.opacity = ".65";
+      }
+    }
+    updateBonusButton();
+
+    bonusBtn.addEventListener("click", ()=>{
+      if(!canTakeBonus()) return;
+      addSP(25);
+      localStorage.setItem(BONUS_KEY, String(Date.now()));
+      updateBonusButton();
+      popText("+25 SP", window.innerWidth/2, 140);
+    });
+
+    // Назад на главную (index.html)
+    backBtn.addEventListener("click", ()=>{
+      window.location.href = "./index.html";
+    });
   </script>
 </body>
 </html>
