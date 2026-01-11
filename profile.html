@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>StarLoot — Профиль</title>
+  <style>
+    :root{
+      --bg1:#6a5cff; --bg2:#28c8ff; --stroke: rgba(255,255,255,.16);
+      --glass: rgba(0,0,0,.18); --text: rgba(255,255,255,.95);
+      --muted: rgba(255,255,255,.7); --shadow: 0 18px 60px rgba(0,0,0,.28);
+      --r:22px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; min-height:100vh; color:var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(900px 700px at 10% 15%, rgba(255,255,255,.18), transparent 60%),
+        radial-gradient(900px 700px at 90% 85%, rgba(255,255,255,.16), transparent 60%),
+        linear-gradient(135deg,var(--bg1),var(--bg2));
+      display:flex; align-items:center; justify-content:center; padding:16px;
+    }
+    .app{
+      width:min(430px,100%); padding:14px 14px 86px; border-radius:34px;
+      background: rgba(0,0,0,.12); border:1px solid rgba(255,255,255,.12);
+      box-shadow: var(--shadow); backdrop-filter: blur(16px);
+      position:relative;
+    }
+    .top{
+      display:flex; align-items:center; gap:10px; justify-content:space-between;
+      padding:10px 12px; border-radius:18px; background:var(--glass);
+      border:1px solid var(--stroke);
+    }
+    .brand{display:flex; align-items:center; gap:10px}
+    .logo{width:34px;height:34px;border-radius:14px; display:grid;place-items:center;
+      background: linear-gradient(135deg,#00e5ff,#a855f7,#ff4fd8)}
+    .wallet{display:flex; gap:8px; flex-wrap:wrap}
+    .pill{
+      padding:8px 10px; border-radius:16px; background: rgba(255,255,255,.12);
+      border:1px solid var(--stroke); white-space:nowrap; font-weight:800;
+      font-size:13px;
+    }
+    .card{
+      margin-top:12px; padding:14px; border-radius:var(--r);
+      background: rgba(255,255,255,.10); border:1px solid var(--stroke);
+    }
+    h1{margin:6px 0 2px; font-size:20px}
+    .sub{margin:0 0 10px; color:var(--muted); font-size:13px}
+    .grid{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+    .btn{
+      width:100%; border:0; border-radius:16px; padding:12px;
+      font-weight:900; cursor:pointer;
+      background: linear-gradient(135deg,#fff1a8,#ffd54a); color:#111;
+    }
+    .btn2{
+      background: linear-gradient(135deg,#0ea5ff,#22c55e); color:#fff;
+    }
+    .list{margin-top:8px}
+    .row{
+      display:flex; justify-content:space-between; gap:10px;
+      padding:10px; border-radius:14px; background: rgba(0,0,0,.18);
+      border:1px solid var(--stroke); margin-bottom:8px;
+    }
+    .nav{
+      position:absolute; left:12px; right:12px; bottom:12px; height:64px;
+      border-radius:22px; background: rgba(0,0,0,.22);
+      border:1px solid rgba(255,255,255,.14);
+      display:flex; align-items:center; justify-content:space-around;
+      backdrop-filter: blur(14px);
+    }
+    .nav a{
+      text-decoration:none; color: rgba(255,255,255,.8); font-size:11px;
+      display:flex; flex-direction:column; align-items:center; gap:6px;
+      padding:8px 10px; border-radius:16px;
+    }
+    .nav a.active{background: rgba(255,255,255,.12)}
+    .toast{
+      position:absolute; left:16px; right:16px; bottom:92px;
+      padding:12px 14px; border-radius:16px; background: rgba(0,0,0,.55);
+      border:1px solid rgba(255,255,255,.14); display:none; text-align:center;
+    }
+    @media (max-width:420px){
+      .top{flex-wrap:wrap}
+      .brand{width:100%}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="top">
+      <div class="brand">
+        <div class="logo">👤</div>
+        <b>Профиль</b>
+      </div>
+      <div class="wallet">
+        <div class="pill">💎 SP: <span id="spTop">0</span></div>
+        <div class="pill">⭐ Stars: <span id="starsTop">0</span></div>
+        <div class="pill">💠 TON: <span id="tonTop">0</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h1>Ваш аккаунт</h1>
+      <p class="sub">Баланс, быстрые действия и статистика.</p>
+      <div class="grid">
+        <button class="btn" onclick="exchange()">🔁 Обмен SP → ⭐</button>
+        <button class="btn btn2" onclick="soon('Покупка Stars скоро')">⭐ Купить Stars</button>
+      </div>
+    </div>
+
+    <div class="card list">
+      <div class="row"><span>Уровень</span><b id="lvl">1</b></div>
+      <div class="row"><span>Всего кликов</span><b id="clicks">0</b></div>
+      <div class="row"><span>Открыто кейсов</span><b id="cases">0</b></div>
+    </div>
+
+    <div class="toast" id="toast">Готово</div>
+
+    <div class="nav">
+      <a href="clicker.html"><i>🐸</i>Кликер</a>
+      <a href="roulette.html"><i>🎰</i>Рулетка</a>
+      <a href="cases.html"><i>📦</i>Кейсы</a>
+      <a class="active" href="profile.html"><i>👤</i>Профиль</a>
+    </div>
+  </div>
+
+  <script>
+    const KEY_SP="starloot_sp", KEY_STARS="starloot_stars", KEY_TON="starloot_ton";
+    const KEY_CLICKS="starloot_clicks", KEY_CASES="starloot_cases";
+
+    function get(k, d=0){ return Number(localStorage.getItem(k) || d); }
+    function set(k, v){ localStorage.setItem(k, String(Math.max(0, Math.floor(v)))); }
+
+    function render(){
+      document.getElementById('spTop').textContent = get(KEY_SP);
+      document.getElementById('starsTop').textContent = get(KEY_STARS);
+      document.getElementById('tonTop').textContent = localStorage.getItem(KEY_TON) || "0";
+      document.getElementById('clicks').textContent = get(KEY_CLICKS);
+      document.getElementById('cases').textContent = get(KEY_CASES);
+      document.getElementById('lvl').textContent = Math.max(1, Math.floor(get(KEY_CLICKS)/100)+1);
+    }
+
+    function toast(t){
+      const el=document.getElementById('toast'); el.textContent=t; el.style.display='block';
+      setTimeout(()=>el.style.display='none',2000);
+    }
+
+    function exchange(){
+      const sp=get(KEY_SP);
+      if(sp<100){ toast('Нужно 100 SP'); return; }
+      set(KEY_SP, sp-100);
+      set(KEY_STARS, get(KEY_STARS)+1);
+      render(); toast('Обмен выполнен ⭐');
+    }
+
+    function soon(t){ toast(t); }
+
+    render();
+  </script>
+</body>
+</html>
