@@ -282,6 +282,41 @@
       box-shadow: 0 18px 40px rgba(0,0,0,.45);
     }
     .toast.show{opacity:1; transform: translateX(-50%) translateY(-6px);}
+    /* --- FIX MOBILE TOPBAR --- */
+.topbar{
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.topbar .brand{
+  flex: 1 1 180px;
+  min-width: 160px;
+}
+
+.topbar .pill{
+  flex: 0 1 auto;
+  white-space: nowrap;
+}
+
+@media (max-width: 420px){
+  .topbar{
+    justify-content: flex-start;
+    gap: 8px;
+  }
+  .topbar .brand{
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+  .topbar .pill{
+    padding: 8px 10px;
+    border-radius: 16px;
+    font-size: 12px;
+  }
+  .topbar .pill .count{
+    font-size: 14px;
+  }
+}
   </style>
 </head>
 
