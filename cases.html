@@ -217,6 +217,32 @@
       border: 1px solid rgba(255,255,255,.12);
     }
     .nav a i{font-style:normal; font-size: 18px}
+    @media (max-width: 420px) {
+  .top {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .top .brand {
+    width: 100%;
+  }
+
+  .wallet {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .wallet .pill {
+    flex: 1 1 45%;
+    min-width: 120px;
+    text-align: center;
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+}
   </style>
 </head>
 <body>
